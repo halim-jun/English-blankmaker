@@ -65,10 +65,11 @@
             margin: 0 2px;
             display: inline-block;
             color: #e0e0e0;
+            cursor: pointer;
         }
         .hidden-word.revealed {
             color: black;
-            background-color: #0099ff;
+            background-color: pink;
         }
         .controls {
             margin-top: 20px;
@@ -122,10 +123,10 @@
             flex-grow: 1;
         }
         .check-box {
-            width: 20px;
-            height: 20px;
-            background-color: #e0e0e0;
-            border-radius: 4px;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #a0a0a0;
+            border-radius: 2px;
             margin-left: 10px;
             cursor: pointer;
             flex-shrink: 0;
@@ -267,6 +268,10 @@
                 box.addEventListener('click', toggleCompleted);
             });
 
+            document.querySelectorAll('.hidden-word').forEach(word => {
+                word.addEventListener('click', toggleWord);
+            });
+
             updateProgress();
         }
 
@@ -286,18 +291,19 @@
             });
         }
 
+        function toggleWord(event) {
+            const word = event.target;
+            word.classList.toggle('revealed');
+            if (word.classList.contains('revealed')) {
+                word.textContent = word.dataset.word;
+            } else {
+                word.textContent = '_'.repeat(word.dataset.word.length);
+            }
+        }
+
         function toggleCompleted(event) {
             const sentence = event.target.closest('.sentence');
             sentence.classList.toggle('completed');
-            const hiddenWords = sentence.querySelectorAll('.hidden-word');
-            hiddenWords.forEach(word => {
-                word.classList.toggle('revealed');
-                if (word.classList.contains('revealed')) {
-                    word.textContent = word.dataset.word;
-                } else {
-                    word.textContent = '_'.repeat(word.dataset.word.length);
-                }
-            });
             updateProgress();
             showToast('Memorized!');
         }
